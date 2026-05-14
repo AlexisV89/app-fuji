@@ -1,3 +1,6 @@
+import jsPDF from "jspdf"
+
+import html2canvas from "html2canvas"
 import { useEffect, useState } from "react"
 
 import {
@@ -17,7 +20,31 @@ export default function Cotizaciones() {
     useState([])
     const [busqueda, setBusqueda] =
   useState("")
+const descargarPDF = async (
+  id
+) => {
+  const input =
+    document.getElementById(id)
 
+  const canvas =
+    await html2canvas(input)
+
+  const imgData =
+    canvas.toDataURL("image/png")
+
+  const pdf = new jsPDF()
+
+  pdf.addImage(
+    imgData,
+    "PNG",
+    0,
+    0,
+    210,
+    140
+  )
+
+  pdf.save("cotizacion.pdf")
+}
   useEffect(() => {
     obtenerCotizaciones()
   }, [])
@@ -127,7 +154,7 @@ export default function Cotizaciones() {
         .includes(texto)
     )
   })
-  .map((cotizacion) => (
+  .map((cotizacion, index) => (
             <div
               key={cotizacion.id}
               style={{

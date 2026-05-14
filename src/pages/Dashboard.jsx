@@ -12,7 +12,7 @@ import {
 } from "../firebase"
 import {
   collection,
-  getDocs,
+  onSnapshot,
 } from "firebase/firestore"
 import {
   BarChart,
@@ -46,6 +46,9 @@ const [clientes, setClientes] =
   const [ultimaCotizacion,
   setUltimaCotizacion] =
   useState(null)
+  const [mostrarNotificacion,
+  setMostrarNotificacion] =
+  useState(false)
   const datosGrafica = [
   {
     nombre: "Cotizaciones",
@@ -71,10 +74,10 @@ useEffect(() => {
   const obtenerCotizaciones = async (
   user
 ) => {
-  try {
-    const querySnapshot = await getDocs(
-      collection(db, "cotizaciones")
-    )
+  
+    onSnapshot(
+  collection(db, "cotizaciones"),
+  (querySnapshot) => {
 
     const datos = []
 
@@ -82,9 +85,22 @@ useEffect(() => {
 
     const doctores = new Set()
     const vendedores = {}
+let cotizacionesHoy = 0
 
+const hoy =
+  new Date()
+    .toLocaleDateString()
     querySnapshot.forEach((doc) => {
+      
       const data = doc.data()
+      const fecha =
+  new Date(
+    data.fecha
+  ).toLocaleDateString()
+
+if (fecha === hoy) {
+  cotizacionesHoy++
+}
 
       const usuarioActual =
   user.email
@@ -116,10 +132,21 @@ vendedores[vendedor] +=
         doctores.add(data.doctor)
       }
     })
-
+setCotizacionesHoy(
+  cotizacionesHoy
+)
     setCotizaciones(datos)
-    if (datos.length > 0) {
+    if (
+  datos.length > 0 &&
+  ultimaCotizacion?.doctor !==
+    datos[0].doctor
+) {
   setUltimaCotizacion(datos[0])
+  setMostrarNotificacion(true)
+
+setTimeout(() => {
+  setMostrarNotificacion(false)
+}, 4000)
 }
 
     setTotalFinanciado(total)
@@ -137,9 +164,9 @@ vendedores[vendedor] +=
     )
 
 setRankingVendedores(ranking)
-  } catch (error) {
-    console.error(error)
-  }
+
+})
+  
 }
   obtenerCotizaciones(user)
 }
@@ -217,6 +244,22 @@ const obtenerRol = async (user) => {
   ? "Administrador 👨‍💼"
   : "Vendedor 👨‍💻"}
         </p>
+        {mostrarNotificacion && (
+  <div
+    style={{
+      backgroundColor: "#2563eb",
+      color: "white",
+      padding: "15px",
+      borderRadius: "15px",
+      marginBottom: "20px",
+      fontWeight: "bold",
+      animation:
+        "pulse 1s infinite",
+    }}
+  >
+    Nueva cotización recibida 🚀
+  </div>
+)}
 {ultimaCotizacion && (
   <div
     style={{

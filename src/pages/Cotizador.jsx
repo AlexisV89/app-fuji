@@ -1,6 +1,9 @@
-import { addDoc, collection } from "firebase/firestore"
 import {
+  addDoc,
+  collection,
   getDocs,
+  getDoc,
+  doc,
 } from "firebase/firestore"
 
 import {
@@ -80,7 +83,8 @@ const faltanteEnganche =
 
   const mensualidad = totalConInteres / meses
   
-  const guardarCotizacion = async () => {
+  const guardarCotizacion = async (e) => {
+  e?.preventDefault()
   try {
     await addDoc(
   collection(db, "cotizaciones"),
@@ -121,8 +125,36 @@ const faltanteEnganche =
     alert("Error al guardar")
   }
 }
-const generarPDF = () => {
-  const doc = new jsPDF()
+const generarPDF = async () => {
+  const pdf = new jsPDF()
+  const usuarioActual =
+  auth.currentUser?.email
+    ?.split("@")[0]
+    ?.toLowerCase()
+
+const usuarioRef = doc(
+  db,
+  "usuarios",
+  usuarioActual
+)
+
+const usuarioSnap =
+  await getDoc(usuarioRef)
+
+let nombreVendedor = ""
+let correoVendedor = ""
+let telefonoVendedor = ""
+
+if (usuarioSnap.exists()) {
+  nombreVendedor =
+    usuarioSnap.data().nombre || ""
+
+  correoVendedor =
+  usuarioSnap.data().correo || ""
+
+  telefonoVendedor =
+    usuarioSnap.data().telefono || ""
+}
 
   // LOGO
  const img = new Image()
@@ -130,7 +162,8 @@ const generarPDF = () => {
 img.src = "/logo.png"
 
 img.onload = () => {
-  doc.addImage(
+
+  pdf.addImage(
     img,
     "PNG",
     15,
@@ -138,17 +171,14 @@ img.onload = () => {
     40,
     20
   )
-  const continuarPDF = () => {
-
-  continuarPDF()
-}
+  
 
   // TITULO
-  doc.setFontSize(22)
+  pdf.setFontSize(22)
 
-  doc.setTextColor(1, 57, 112)
+  pdf.setTextColor(1, 57, 112)
 
-  doc.text(
+  pdf.text(
     "Cotización Financiera",
     105,
     50,
@@ -156,110 +186,329 @@ img.onload = () => {
     null,
     "center"
   )
+const fechaActual =
+  new Date().toLocaleDateString(
+    "es-MX",
+    {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    }
+  )
 
+pdf.setFontSize(12)
+
+pdf.setTextColor(0, 0, 0)
+
+pdf.text(
+  `Fecha: ${fechaActual}`,
+  150,
+  70
+)
   // LINEA
-  doc.setDrawColor(1, 57, 112)
+  pdf.setDrawColor(1, 57, 112)
 
-  doc.line(15, 55, 195, 55)
+  pdf.line(15, 55, 195, 55)
 
   // DATOS CLIENTE
-  doc.setFontSize(14)
+  pdf.setFontSize(14)
 
-  doc.setTextColor(0, 0, 0)
+  pdf.setTextColor(0, 0, 0)
 
-  doc.text(
+  pdf.text(
     `Doctor: ${doctor}`,
     20,
     70
   )
 
-  doc.text(
+  pdf.text(
     `Hospital: ${hospital}`,
     20,
     80
   )
 
-  doc.text(
+  pdf.text(
     `Teléfono: ${telefono}`,
     20,
     90
   )
 
-  doc.text(
+  pdf.text(
     `Correo: ${correoDoctor}`,
     20,
     100
   )
 
   // BARRA AZUL
-  doc.setFillColor(1, 57, 112)
+  pdf.setFillColor(1, 57, 112)
 
-  doc.rect(15, 115, 180, 10, "F")
+  pdf.rect(15, 115, 180, 10, "F")
 
-  doc.setTextColor(255, 255, 255)
+  pdf.setTextColor(255, 255, 255)
 
-  doc.text(
+  pdf.text(
     "Detalle Financiero",
     20,
     122
   )
 
   // DATOS FINANCIEROS
-  doc.setTextColor(0, 0, 0)
+  pdf.setTextColor(0, 0, 0)
 
-  doc.text(
+  pdf.text(
+  pdf.splitTextToSize(
     `Producto: ${productoSeleccionado.nombre}`,
-    20,
-    140
-  )
+    70
+  ),
+  20,
+  140
+)
 
-  doc.text(
+  pdf.text(
     `Precio negociado: ${formatoMXN(precioFinal)}`,
     20,
     150
   )
 
-  doc.text(
+  pdf.text(
     `Enganche: ${enganche}%`,
     20,
     160
   )
 
-  doc.text(
+  pdf.text(
     `Plazo: ${meses} meses`,
     20,
     170
   )
 
-  doc.text(
+  pdf.text(
     `Mensualidad: ${formatoMXN(mensualidad)}`,
     20,
     180
   )
+// CUADRO FINANCIERO
 
-  // TOTAL FINAL
-  doc.setFontSize(18)
+pdf.setDrawColor(180)
 
-  doc.setTextColor(22, 163, 74)
+pdf.rect(
+  110,
+  130,
+  80,
+  65
+)
 
-  doc.text(
-    `Total final: ${formatoMXN(totalFinalCliente)}`,
-    20,
-    200
-  )
+pdf.setFontSize(12)
+
+pdf.text(
+  `Monto enganche: ${formatoMXN(montoEnganche)}`,
+  115,
+140
+)
+pdf.setFontSize(14)
+
+pdf.setTextColor(
+  1,
+  57,
+  112
+)
+
+pdf.text(
+  "Resumen Financiero",
+  105,
+  122
+)
+pdf.text(
+  `Monto financiado: ${formatoMXN(montoFinanciado)}`,
+  115,
+152
+)
+
+pdf.text(
+  `Interés aplicado: ${formatoMXN(
+    montoFinanciado * interes
+  )}`,
+  115,
+164
+)
+
+pdf.text(
+  `Total antes IVA: ${formatoMXN(
+    totalFinalCliente
+  )}`,
+  115,
+176
+)
+
+pdf.text(
+  `IVA (16%): ${formatoMXN(
+    totalFinalCliente * 0.16
+  )}`,
+  115,
+  188
+)
+pdf.setFillColor(
+  16,
+  185,
+  129
+)
+
+pdf.rect(
+  100,
+  195,
+  90,
+  15,
+  "F"
+)
+
+pdf.setTextColor(
+  255,
+  255,
+  255
+)
+
+pdf.setFontSize(14)
+
+pdf.text(
+  `Total con IVA: ${formatoMXN(
+    totalFinalCliente * 1.16
+  )}`,
+  115,
+  205
+)
+
 
   // FOOTER
-  doc.setFontSize(11)
+  pdf.setFontSize(11)
 
-  doc.setTextColor(120)
+  pdf.setTextColor(120)
 
-  doc.text(
-    "Endosalud / Fuji Film ©",
-    20,
-    280
-  )
+  pdf.setFillColor(
+  1,
+  57,
+  112
+)
 
-  doc.save(
+pdf.rect(
+  0,
+  290,
+  210,
+  10,
+  "F"
+)
+
+pdf.setTextColor(
+  255,
+  255,
+  255
+)
+
+pdf.setFontSize(10)
+
+pdf.text(
+  "Endosalud | FujiFilm | APP FUJI",
+  60,
+  296
+)
+pdf.setFontSize(12)
+
+pdf.setTextColor(0, 0, 0)
+
+pdf.text(
+  "--------------------------------",
+  20,
+  245
+)
+pdf.setDrawColor(
+  1,
+  57,
+  112
+)
+
+pdf.rect(
+  15,
+  220,
+  180,
+  50
+)
+
+pdf.setFillColor(
+  1,
+  57,
+  112
+)
+
+pdf.rect(
+  15,
+  235,
+  180,
+  10,
+  "F"
+)
+
+pdf.setTextColor(
+  255,
+  255,
+  255
+)
+
+pdf.setFontSize(13)
+
+pdf.text(
+  "Datos del Vendedor",
+  20,
+  232
+)
+
+pdf.setTextColor(
+  0,
+  0,
+  0
+)
+
+pdf.setFontSize(11)
+
+pdf.setDrawColor(120)
+
+pdf.line(
+  120,
+  280,
+  180,
+  280
+)
+
+pdf.setFontSize(10)
+
+pdf.setTextColor(80)
+
+pdf.text(
+  "Firma del vendedor",
+  135,
+  287
+)
+pdf.text(
+  `Vendedor: ${nombreVendedor}`,
+  20,
+  250
+)
+pdf.text(
+  `Correo: ${correoVendedor}`,
+  20,
+  260
+)
+
+pdf.text(
+  `Teléfono: ${telefonoVendedor}`,
+  20,
+  270
+)
+
+pdf.text(
+  "APP FUJI / Endosalud",
+  20,
+  285
+)
+  pdf.save(
     `Cotizacion-${doctor}.pdf`
   )
   }
@@ -503,8 +752,37 @@ margin: "0 auto",
     maximumFractionDigits: 2,
   })}
 </h2>
+<h3
+  style={{
+    color: "#f59e0b",
+    marginTop: "10px",
+  }}
+>
+  IVA (16%): $
+  {(totalFinalCliente * 0.16).toLocaleString(
+    undefined,
+    {
+      maximumFractionDigits: 2,
+    }
+  )}
+</h3>
 
+<h2
+  style={{
+    color: "#dc2626",
+    marginTop: "10px",
+  }}
+>
+  Total + IVA: $
+  {(totalFinalCliente * 1.16).toLocaleString(
+    undefined,
+    {
+      maximumFractionDigits: 2,
+    }
+  )}
+</h2>
 <button
+  type="button"
   onClick={guardarCotizacion}
   style={{
     marginTop: "20px",

@@ -1,6 +1,5 @@
 import jsPDF from "jspdf"
 
-import html2canvas from "html2canvas"
 import { useEffect, useState } from "react"
 
 import {
@@ -20,30 +19,98 @@ export default function Cotizaciones() {
     useState([])
     const [busqueda, setBusqueda] =
   useState("")
-const descargarPDF = async (
-  id
+const descargarPDF = (
+  cotizacion
 ) => {
-  const input =
-    document.getElementById(id)
-
-  const canvas =
-    await html2canvas(input)
-
-  const imgData =
-    canvas.toDataURL("image/png")
-
   const pdf = new jsPDF()
 
-  pdf.addImage(
-    imgData,
-    "PNG",
-    0,
-    0,
-    210,
-    140
+  pdf.setFontSize(20)
+
+  pdf.setTextColor(
+    1,
+    57,
+    112
   )
 
-  pdf.save("cotizacion.pdf")
+  pdf.text(
+    "Cotización Fuji",
+    20,
+    20
+  )
+
+  pdf.setFontSize(12)
+
+  pdf.setTextColor(
+    0,
+    0,
+    0
+  )
+
+  pdf.text(
+    `Doctor: ${cotizacion.doctor}`,
+    20,
+    40
+  )
+
+  pdf.text(
+    `Hospital: ${cotizacion.hospital}`,
+    20,
+    50
+  )
+
+  pdf.text(
+    `Telefono: ${cotizacion.telefono}`,
+    20,
+    60
+  )
+
+  pdf.text(
+    `Producto: ${cotizacion.producto}`,
+    20,
+    70
+  )
+
+  pdf.text(
+    `Plazo: ${cotizacion.meses} meses`,
+    20,
+    80
+  )
+
+  pdf.text(
+    `Total: $${cotizacion.totalFinalCliente?.toLocaleString()}`,
+    20,
+    90
+  )
+
+  pdf.text(
+    `IVA (16%): $${(
+      cotizacion.totalFinalCliente *
+      0.16
+    ).toLocaleString()}`,
+    20,
+    100
+  )
+
+  pdf.setFontSize(16)
+
+  pdf.setTextColor(
+    22,
+    163,
+    74
+  )
+
+  pdf.text(
+    `Total + IVA: $${(
+      cotizacion.totalFinalCliente *
+      1.16
+    ).toLocaleString()}`,
+    20,
+    120
+  )
+
+  pdf.save(
+    `Cotizacion-${cotizacion.doctor}.pdf`
+  )
 }
   useEffect(() => {
     obtenerCotizaciones()
@@ -156,7 +223,8 @@ const descargarPDF = async (
   })
   .map((cotizacion, index) => (
             <div
-              key={cotizacion.id}
+  id={`cotizacion-${index}`}
+  key={cotizacion.id}
               style={{
                 backgroundColor: "white",
                 borderRadius: "20px",
@@ -225,7 +293,7 @@ const descargarPDF = async (
                 {cotizacion.totalFinalCliente?.toLocaleString()}
               </p>
 
-              <p
+              <div
   style={{
     color: "#0f172a",
     marginTop: "10px",
@@ -233,7 +301,7 @@ const descargarPDF = async (
   }}
 >
                 📅 Plazo:
-                <p>
+                <div>
   🕒 Fecha:
   {" "}
   {cotizacion.fecha
@@ -242,10 +310,29 @@ const descargarPDF = async (
           1000
       ).toLocaleString()
     : "Sin fecha"}
-</p>
+</div>
                 {" "}
                 {cotizacion.meses} meses
-              </p>
+              </div>
+              <button
+  onClick={() =>
+  descargarPDF(
+    cotizacion
+  )
+}
+  style={{
+    marginTop: "20px",
+    padding: "12px",
+    border: "none",
+    borderRadius: "10px",
+    backgroundColor: "#013970",
+    color: "white",
+    cursor: "pointer",
+    width: "100%",
+  }}
+>
+  Descargar PDF 📄
+</button>
             </div>
           ))}
         </div>

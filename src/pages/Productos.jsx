@@ -45,6 +45,11 @@ export default function Productos() {
   id: doc.id,
   ...doc.data(),
 })
+datos.sort(
+  (a, b) =>
+    b.fecha?.seconds -
+    a.fecha?.seconds
+)
       })
 
       setProductos(datos)

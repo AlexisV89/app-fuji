@@ -100,7 +100,7 @@ const faltanteEnganche =
     ciudad,
     comentarios,
 
-    producto:
+    EQUIPO:
       productoSeleccionado.nombre,
 
     precioFinal,
@@ -164,13 +164,13 @@ img.src = "/logo.png"
 img.onload = () => {
 
   pdf.addImage(
-    img,
-    "PNG",
-    15,
-    10,
-    40,
-    20
-  )
+  img,
+  "PNG",
+  15,
+  10,
+  40,
+  20
+)
   
 
   // TITULO
@@ -179,7 +179,7 @@ img.onload = () => {
   pdf.setTextColor(1, 57, 112)
 
   pdf.text(
-    "Cotización Financiera",
+    "COTIZACIÓN FINANCIERA",
     105,
     50,
     null,
@@ -199,94 +199,200 @@ const fechaActual =
 pdf.setFontSize(12)
 
 pdf.setTextColor(0, 0, 0)
-
+const folio =
+  `COT-${new Date()
+    .getFullYear()}-${Math.floor(
+    Math.random() * 9000 + 1000
+  )}`
 pdf.text(
   `Fecha: ${fechaActual}`,
   150,
   70
 )
+pdf.setFontSize(9)
+
+pdf.text(
+  `Generado por APP FUJI`,
+  150,
+  100
+)
+pdf.setFontSize(12)
+
+pdf.setTextColor(
+  1,
+  57,
+  112
+)
+
+pdf.text(
+  `Folio: ${folio}`,
+  150,
+  78
+)
+
+pdf.setTextColor(
+  0,
+  0,
+  0
+)
+
+pdf.text(
+  "Vigencia: 30 días",
+  150,
+  86
+)
+pdf.setFontSize(10)
+
+pdf.text(
+  `Asesor Comercial:`,
+  150,
+  94
+)
+
+pdf.text(
+  nombreVendedor,
+  150,
+  100
+)
+
   // LINEA
   pdf.setDrawColor(1, 57, 112)
 
   pdf.line(15, 55, 195, 55)
+  pdf.setDrawColor(
+  1,
+  57,
+  112
+)
+
+pdf.line(
+  15,
+  57,
+  195,
+  57
+)
 
   // DATOS CLIENTE
   pdf.setFontSize(14)
 
   pdf.setTextColor(0, 0, 0)
+pdf.setDrawColor(
+  220
+)
+
+pdf.rect(
+  15,
+  62,
+  120,
+  60
+)
+ pdf.setFontSize(16)
+pdf.setFont("helvetica", "bold")
+
+pdf.text(
+  doctor || "Sin nombre",
+  20,
+  72
+)
+
+pdf.setFontSize(12)
+pdf.setFont("helvetica", "normal")
 
   pdf.text(
-    `Doctor: ${doctor}`,
-    20,
-    70
-  )
-
-  pdf.text(
-    `Hospital: ${hospital}`,
+   ` Hospital: ${hospital}`,
     20,
     80
   )
 
   pdf.text(
-    `Teléfono: ${telefono}`,
+    ` Teléfono: ${telefono}`,
     20,
     90
   )
 
   pdf.text(
-    `Correo: ${correoDoctor}`,
+    ` Correo: ${correoDoctor}`,
     20,
     100
   )
+pdf.text(
+  ` Estado: ${estado}`,
+  20,
+  110
+)
 
+pdf.text(
+  ` Ciudad: ${ciudad}`,
+  20,
+  120
+)
   // BARRA AZUL
   pdf.setFillColor(1, 57, 112)
 
-  pdf.rect(15, 115, 180, 10, "F")
+  pdf.rect(15, 128, 180, 10, "F")
 
   pdf.setTextColor(255, 255, 255)
 
   pdf.text(
-    "Detalle Financiero",
-    20,
-    122
-  )
+  "DETALLE FINANCIERO",
+  20,
+  135
+)
 
   // DATOS FINANCIEROS
   pdf.setTextColor(0, 0, 0)
-
+pdf.setFont(
+  "helvetica",
+  "bold"
+)
   pdf.text(
   pdf.splitTextToSize(
-    `Producto: ${productoSeleccionado.nombre}`,
+    `Equipo: ${productoSeleccionado.nombre}`,
     70
   ),
   20,
-  140
+  150
 )
 
-  pdf.text(
-    `Precio negociado: ${formatoMXN(precioFinal)}`,
-    20,
-    150
-  )
+pdf.text(
+  `Precio negociado: ${formatoMXN(precioFinal)}`,
+  20,
+  170
+)
 
-  pdf.text(
-    `Enganche: ${enganche}%`,
-    20,
-    160
-  )
+pdf.text(
+  `Enganche: ${enganche}%`,
+  20,
+  180
+)
 
-  pdf.text(
-    `Plazo: ${meses} meses`,
-    20,
-    170
-  )
+pdf.text(
+  `Plazo: ${meses} meses`,
+  20,
+  190
+)
+pdf.setFillColor(
+  219,
+  234,
+  254
+)
 
-  pdf.text(
-    `Mensualidad: ${formatoMXN(mensualidad)}`,
-    20,
-    180
-  )
+pdf.rect(
+  18,
+  192,
+  70,
+  12,
+  "F"
+)
+pdf.text(
+  `Mensualidad: ${formatoMXN(mensualidad)}`,
+  20,
+  200
+)
+  pdf.setFont(
+  "helvetica",
+  "normal"
+)
 // CUADRO FINANCIERO
 
 pdf.setDrawColor(180)
@@ -297,7 +403,10 @@ pdf.rect(
   80,
   65
 )
-
+pdf.line(110,145,190,145)
+pdf.line(110,160,190,160)
+pdf.line(110,175,190,175)
+pdf.line(110,190,190,190)
 pdf.setFontSize(12)
 
 pdf.text(
@@ -314,9 +423,9 @@ pdf.setTextColor(
 )
 
 pdf.text(
-  "Resumen Financiero",
-  105,
-  122
+  "RESUMEN DE INVERSIÓN",
+  120,
+  125
 )
 pdf.text(
   `Monto financiado: ${formatoMXN(montoFinanciado)}`,
@@ -367,13 +476,13 @@ pdf.setTextColor(
   255
 )
 
-pdf.setFontSize(14)
+pdf.setFontSize(16)
 
 pdf.text(
   `Total con IVA: ${formatoMXN(
     totalFinalCliente * 1.16
   )}`,
-  115,
+  108,
   205
 )
 
@@ -382,7 +491,25 @@ pdf.text(
   pdf.setFontSize(11)
 
   pdf.setTextColor(120)
+pdf.setTextColor(
+  1,
+  57,
+  112
+)
 
+pdf.setFontSize(9)
+
+pdf.text(
+  "www.endosalud.com",
+  20,
+  286
+)
+
+pdf.text(
+  "55 1234 5678",
+  90,
+  286
+)
   pdf.setFillColor(
   1,
   57,
@@ -406,7 +533,7 @@ pdf.setTextColor(
 pdf.setFontSize(10)
 
 pdf.text(
-  "Endosalud | FujiFilm | APP FUJI",
+  "Endosalud / FujiFilm © Todos los derechos reservados",
   60,
   296
 )
@@ -424,12 +551,20 @@ pdf.setDrawColor(
   57,
   112
 )
+pdf.setDrawColor(220)
+
 
 pdf.rect(
   15,
-  220,
+  235,
   180,
-  50
+  40
+)
+pdf.line(
+  105,
+  235,
+  105,
+  275
 )
 
 pdf.setFillColor(
@@ -455,11 +590,23 @@ pdf.setTextColor(
 pdf.setFontSize(13)
 
 pdf.text(
-  "Datos del Vendedor",
+  "ASESOR COMERCIAL",
   20,
-  232
+  242
+)
+pdf.setFontSize(13)
+
+pdf.setTextColor(
+  1,
+  57,
+  112
 )
 
+pdf.text(
+  "AUTORIZACIÓN",
+  130,
+  242
+)
 pdf.setTextColor(
   0,
   0,
@@ -472,9 +619,9 @@ pdf.setDrawColor(120)
 
 pdf.line(
   120,
-  280,
+  255,
   180,
-  280
+  255
 )
 
 pdf.setFontSize(10)
@@ -483,31 +630,85 @@ pdf.setTextColor(80)
 
 pdf.text(
   "Firma del vendedor",
-  135,
-  287
+  130,
+  263
 )
+
+// NOMBRE
+
+pdf.setFont(
+  "helvetica",
+  "bold"
+)
+
 pdf.text(
-  `Vendedor: ${nombreVendedor}`,
+  "Vendedor:",
   20,
   250
 )
+
+pdf.setFont(
+  "helvetica",
+  "normal"
+)
+pdf.setFontSize(11)
 pdf.text(
-  `Correo: ${correoVendedor}`,
+  nombreVendedor,
+  50,
+  250
+)
+
+// CORREO
+
+pdf.setFont(
+  "helvetica",
+  "bold"
+)
+
+pdf.text(
+  "Correo:",
   20,
   260
 )
 
+pdf.setFont(
+  "helvetica",
+  "normal"
+)
+
 pdf.text(
-  `Teléfono: ${telefonoVendedor}`,
+  correoVendedor,
+  50,
+  260
+)
+
+// TELEFONO
+
+pdf.setFont(
+  "helvetica",
+  "bold"
+)
+
+pdf.text(
+  "Teléfono:",
   20,
   270
 )
 
-pdf.text(
-  "APP FUJI / Endosalud",
-  20,
-  285
+pdf.setFont(
+  "helvetica",
+  "normal"
 )
+
+pdf.text(
+  telefonoVendedor,
+  50,
+  270
+)
+
+
+pdf.setDrawColor(200)
+
   pdf.save(
     `Cotizacion-${doctor}.pdf`
   )

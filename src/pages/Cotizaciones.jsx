@@ -47,7 +47,7 @@ const descargarPDF = (
   )
 
   pdf.text(
-    `Doctor: ${cotizacion.doctor}`,
+    `${cotizacion.doctor}`,
     20,
     40
   )

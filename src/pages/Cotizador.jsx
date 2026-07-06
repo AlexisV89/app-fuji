@@ -223,7 +223,10 @@ pdf.setTextColor(
   57,
   112
 )
-
+pdf.setFont(
+  "helvetica",
+  "bold"
+)
 pdf.text(
   `Folio: ${folio}`,
   150,
@@ -252,7 +255,7 @@ pdf.text(
 pdf.text(
   nombreVendedor,
   150,
-  100
+  106
 )
 
   // LINEA
@@ -424,8 +427,8 @@ pdf.setTextColor(
 
 pdf.text(
   "RESUMEN DE INVERSIÓN",
-  120,
-  125
+  118,
+  122
 )
 pdf.text(
   `Monto financiado: ${formatoMXN(montoFinanciado)}`,
@@ -463,9 +466,9 @@ pdf.setFillColor(
 )
 
 pdf.rect(
-  100,
+  95,
   195,
-  90,
+  95,
   15,
   "F"
 )
@@ -482,7 +485,7 @@ pdf.text(
   `Total con IVA: ${formatoMXN(
     totalFinalCliente * 1.16
   )}`,
-  108,
+  115,
   205
 )
 
@@ -502,13 +505,13 @@ pdf.setFontSize(9)
 pdf.text(
   "www.endosalud.com",
   20,
-  286
+  283
 )
 
 pdf.text(
   "55 1234 5678",
   90,
-  286
+  283
 )
   pdf.setFillColor(
   1,
@@ -624,7 +627,7 @@ pdf.line(
   255
 )
 
-pdf.setFontSize(10)
+pdf.setFontSize(11)
 
 pdf.setTextColor(80)
 

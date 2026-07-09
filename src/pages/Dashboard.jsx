@@ -49,6 +49,9 @@ const [clientes, setClientes] =
   const [mostrarNotificacion,
   setMostrarNotificacion] =
   useState(false)
+  const [cotizacionesHoy,
+  setCotizacionesHoy] =
+  useState(0)
   const datosGrafica = [
   {
     nombre: "Cotizaciones",

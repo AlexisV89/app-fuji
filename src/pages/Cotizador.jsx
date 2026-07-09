@@ -332,7 +332,7 @@ pdf.text(
   // BARRA AZUL
   pdf.setFillColor(1, 57, 112)
 
-  pdf.rect(15, 128, 180, 10, "F")
+  pdf.rect(15, 128, 95, 10, "F")
 
   pdf.setTextColor(255, 255, 255)
 
@@ -404,18 +404,15 @@ pdf.rect(
   110,
   130,
   80,
-  65
+  70
 )
-pdf.line(110,145,190,145)
-pdf.line(110,160,190,160)
-pdf.line(110,175,190,175)
-pdf.line(110,190,190,190)
+
 pdf.setFontSize(12)
 
 pdf.text(
   `Monto enganche: ${formatoMXN(montoEnganche)}`,
   115,
-140
+141
 )
 pdf.setFontSize(14)
 
@@ -427,13 +424,13 @@ pdf.setTextColor(
 
 pdf.text(
   "RESUMEN DE INVERSIÓN",
-  118,
-  122
+  112,
+  128
 )
 pdf.text(
   `Monto financiado: ${formatoMXN(montoFinanciado)}`,
   115,
-152
+153
 )
 
 pdf.text(
@@ -441,7 +438,7 @@ pdf.text(
     montoFinanciado * interes
   )}`,
   115,
-164
+165
 )
 
 pdf.text(
@@ -449,7 +446,7 @@ pdf.text(
     totalFinalCliente
   )}`,
   115,
-176
+177
 )
 
 pdf.text(
@@ -457,7 +454,7 @@ pdf.text(
     totalFinalCliente * 0.16
   )}`,
   115,
-  188
+  189
 )
 pdf.setFillColor(
   16,
@@ -466,9 +463,9 @@ pdf.setFillColor(
 )
 
 pdf.rect(
-  95,
-  195,
-  95,
+  110,
+  198,
+  80,
   15,
   "F"
 )
@@ -486,7 +483,7 @@ pdf.text(
     totalFinalCliente * 1.16
   )}`,
   115,
-  205
+  208
 )
 
 
@@ -762,7 +759,7 @@ pdf.setDrawColor(200)
             borderRadius: "15px",
             marginTop: "30px",
             maxWidth: "700px",
-maxWidth: "700px",
+
 width: window.innerWidth < 768 ? "90%" : "100%",
 margin: "0 auto",
           }}

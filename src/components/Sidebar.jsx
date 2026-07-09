@@ -121,6 +121,12 @@ const cerrarSesion = async () => {
 >
   Cotizaciones
 </Link>
+<Link
+  to="/lp-productos"
+  style={linkStyle}
+>
+  📦 LP Productos
+</Link>
 
 {rol === "admin" && (
   <Link

@@ -13,6 +13,7 @@ import Cotizador from "./pages/Cotizador"
 import Cotizaciones from "./pages/Cotizaciones"
 import Productos from "./pages/Productos"
 import Usuarios from "./pages/Usuarios"
+import LPProductos from "./pages/LPProductos"
 
 function App() {
 
@@ -59,7 +60,7 @@ useEffect(() => {
   }
 }, [])
   return (
-    <BrowserRouter>
+   <BrowserRouter basename="/">
     {!online && (
   <div
     style={{
@@ -130,6 +131,14 @@ useEffect(() => {
       <AdminRoute>
         <Usuarios />
       </AdminRoute>
+    </ProtectedRoute>
+  }
+/>
+<Route
+  path="/lp-productos"
+  element={
+    <ProtectedRoute>
+      <LPProductos />
     </ProtectedRoute>
   }
 />
